@@ -1,6 +1,8 @@
 # cs4071-project
 Design and Analysis of Algorithms (CS 4071) – Fall 2016 – Programming Project (Assignment 3) – Diameter and connected components of a network
 
+[Assignment Details](./assignment.pdf)
+
 ## Compile and Run
 ```bash
 $ g++ main.cpp -o main; ./main
