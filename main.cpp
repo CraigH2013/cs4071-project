@@ -179,6 +179,25 @@ vector<vector<int> > distanceMatrix(vector<vector<bool> > graph) {
   return matrix;
 }
 
+/**
+ * Check if a graph is connected using it's distance matrix
+ * @param  distMatrix distance matrix of a graph
+ * @return            true if connected, false if not
+ */
+bool isConnected(vector<vector<int> > distMatrix) {
+  int size = distMatrix[0].size();
+
+  // a -1 in the dist matrix indicates that there is a disconnect
+  for (int i = 0; i < size; i++) {
+    for (int j = 0; j < size; j++) {
+      if (distMatrix[i][j] == -1) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 int main(int argc, char const *argv[]) {
 
   cout << endl;
@@ -264,6 +283,8 @@ int main(int argc, char const *argv[]) {
   printMatrix(adjMat, "Adjacency Matrix");
 
   printMatrix(distanceMatrix(adjMat), "Distance Matrix");
+
+  cout << "Connected: " << isConnected(distanceMatrix(adjMat)) << endl;
 
   cout << endl;
 
