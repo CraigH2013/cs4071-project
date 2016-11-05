@@ -198,6 +198,31 @@ bool isConnected(vector<vector<int> > distMatrix) {
   return true;
 }
 
+/**
+ * Get the diameter of a graph
+ * @param  graph adjacency matrix of the graph
+ * @return       the diameter of the graph
+ */
+int diameter(vector<vector<bool> > graph) {
+  // get the distance matrix of the graph
+  vector<vector<int> > distMatrix = distanceMatrix(graph);
+
+  // make sure the graph is connected
+  if (isConnected(distMatrix)) {
+    // find the max distance in the distance matrix
+    int size = distMatrix[0].size();
+    int max = 0;
+    for (int i = 0; i < size; i++) {
+      for (int j = 0; j < size; j++) {
+        max = distMatrix[i][j] > max ? distMatrix[i][j] : max;
+      }
+    }
+    return max;
+  }
+  return -1;
+}
+
+
 int main(int argc, char const *argv[]) {
 
   cout << endl;
