@@ -160,10 +160,16 @@ int bfs(vector<vector<bool> > graph, int start, int end) {
   return -1;
 }
 
+/**
+ * Creates a matrix where ij is the distance between vertex i and vertex j
+ * @param  graph adjacency matrix of the graph
+ * @return       returns the distance matrix
+ */
 vector<vector<int> > distanceMatrix(vector<vector<bool> > graph) {
   int size = graph[0].size();
   vector<vector<int> > matrix(size, vector<int>(size, -1));
 
+  // use bfs to compute the distance for each element of the matrix
   for (int i = 0; i < size; i++) {
     for (int j = 0; j < size; j++) {
       matrix[i][j] = bfs(graph, i, j);
