@@ -2,6 +2,7 @@
 #include <sstream>
 #include <vector>
 #include <iostream>
+#include <iomanip>
 #include <queue>
 
 using namespace std;
@@ -61,13 +62,14 @@ string removeChar(string input, char c) {
  * Prints the matrix in a readable format
  * @param matrix the adjacency matrix of a graph
  */
-void printMatrix(vector<vector<bool> > matrix) {
-  cout << endl << "Adjacency Matrix: " << endl;
+template <typename T>
+void printMatrix(vector<vector<T> > matrix, string title) {
+  cout << endl << title << ": " << endl;
   int size = matrix[0].size();
   for (int i = 0; i < size; i++) {
     cout << "  ";
     for (int j = 0; j < size; j++) {
-      cout << matrix[i][j] << " ";
+      cout << setw(3) << matrix[i][j] << " ";
     }
     cout << endl;
   }
@@ -158,6 +160,19 @@ int bfs(vector<vector<bool> > graph, int start, int end) {
   return -1;
 }
 
+vector<vector<int> > distanceMatrix(vector<vector<bool> > graph) {
+  int size = graph[0].size();
+  vector<vector<int> > matrix(size, vector<int>(size, -1));
+
+  for (int i = 0; i < size; i++) {
+    for (int j = 0; j < size; j++) {
+      matrix[i][j] = bfs(graph, i, j);
+    }
+  }
+
+  return matrix;
+}
+
 int main(int argc, char const *argv[]) {
 
   cout << endl;
@@ -240,9 +255,9 @@ int main(int argc, char const *argv[]) {
   }
 
   // print the adjacency matrix for the user to inspect
-  printMatrix(adjMat);
+  printMatrix(adjMat, "Adjacency Matrix");
 
-  bfs(adjMat, 3, 1);
+  printMatrix(distanceMatrix(adjMat), "Distance Matrix");
 
   cout << endl;
 
