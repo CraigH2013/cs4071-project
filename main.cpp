@@ -284,8 +284,6 @@ int main(int argc, char const *argv[]) {
 
   printMatrix(distanceMatrix(adjMat), "Distance Matrix");
 
-  cout << "Connected: " << isConnected(distanceMatrix(adjMat)) << endl;
-
   cout << endl;
 
   return 0;
