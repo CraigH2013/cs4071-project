@@ -2,6 +2,7 @@
 #include <sstream>
 #include <vector>
 #include <iostream>
+#include <queue>
 
 using namespace std;
 
@@ -56,8 +57,13 @@ string removeChar(string input, char c) {
   return input;
 }
 
-void printMatrix(vector<vector<bool> > matrix, int size) {
+/**
+ * Prints the matrix in a readable format
+ * @param matrix the adjacency matrix of a graph
+ */
+void printMatrix(vector<vector<bool> > matrix) {
   cout << endl << "Adjacency Matrix: " << endl;
+  int size = matrix[0].size();
   for (int i = 0; i < size; i++) {
     cout << "  ";
     for (int j = 0; j < size; j++) {
@@ -65,6 +71,91 @@ void printMatrix(vector<vector<bool> > matrix, int size) {
     }
     cout << endl;
   }
+}
+
+/**
+ * Retrieve all vertices that the given vertex is connected to
+ * @param  graph the adjacency matrix of the graph
+ * @param  vert  the vertex to search from
+ * @return       the neighbors connected to the given vertex
+ */
+vector<int> getNeighbors(vector<vector<bool> > graph, int vert) {
+  // array for neighbors
+  vector<int> neighbors;
+
+  // number of vertices in graph
+  int numOfVertices = graph[0].size();
+
+  // look through the column matching the vertex number
+  for (int i = 0; i < numOfVertices; i++) {
+    if (graph[i][vert] == true) {
+      // add the vertex
+      neighbors.push_back(i);
+    }
+  }
+
+  return neighbors;
+}
+
+/**
+ * Computes the distance between two vertices using a breadth-first traversal
+ * @param  graph  adjacency matrix of the graph
+ * @param  start  starting vertex
+ * @param  end ending vertex
+ * @return        The distance between start and end. Returns -1 if not found.
+ */
+int bfs(vector<vector<bool> > graph, int start, int end) {
+  // queue for neighbor vertices
+  queue<int> verts;
+
+  // queue for tracking distance
+  queue<int> dist;
+
+  int numOfVertices = graph[0].size();
+
+  // track vertices already visited
+  vector<bool> visited(numOfVertices);
+
+  // mark the starting vertex visited and push to queues
+  visited[start] = true;
+  verts.push(start);
+  dist.push(0);
+
+  int curVert, distance;
+  vector<int> neighbors;
+
+  while (!verts.empty()) {
+    // get vertex and distance
+    curVert = verts.front();
+    distance = dist.front();
+
+    // NOTE for debugging purposes only
+    // cout << curVert << "(" << distance << ")" << endl;
+
+    // if vertex equals end, return distance
+    if (curVert == end) {
+      return distance;
+    }
+
+    // remove vertex and distance from queues
+    verts.pop();
+    dist.pop();
+
+    // get the neighbors of the current vertex
+    neighbors = getNeighbors(graph, curVert);
+
+    // add the neighbors and current distance to the queues
+    for (int i = 0; i < neighbors.size(); i++) {
+      if (!visited[neighbors[i]]) {
+        visited[neighbors[i]] = true;
+        verts.push(neighbors[i]);
+        dist.push(distance + 1);
+      }
+    }
+  }
+
+  // the end vertex was never found, return -1
+  return -1;
 }
 
 int main(int argc, char const *argv[]) {
@@ -149,7 +240,9 @@ int main(int argc, char const *argv[]) {
   }
 
   // print the adjacency matrix for the user to inspect
-  printMatrix(adjMat, numOfNodes);
+  printMatrix(adjMat);
+
+  bfs(adjMat, 3, 1);
 
   cout << endl;
 
