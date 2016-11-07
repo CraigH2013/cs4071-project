@@ -9,24 +9,14 @@ $ g++ -std=c++11 main.cpp -o main.out; ./main.out
 ```
 
 ## Usage
-The program will first prompt the user for the number of vertices in their graph. In the case of this graph:
+The program will prompt the user to input a graph. In the case of the graph below:
 
-![graph 1](/images/graph-1.png)
+![graph 3](/images/graph-3.png)
 
-The user would input: `4`
-
-Then the program will ask the user to input the graph. For the above graph, the user would input:
+The input would look like the following:
 
 ```bash
-0->1, 0->2, 2->1, 2->3
+Enter the graph: 6 0 2 1 2 2 3 2 4 4 5 -1
 ```
 
-If the graph were undirected like the one below:
-
-![graph 2](/images/graph-2.png)
-
-The user would input:
-
-```bash
-0-1, 1-2
-```
+The first number is the number of vertices, the last is to terminate the input, and the rest are pairs of vertices representing an edge in the graph.
