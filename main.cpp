@@ -145,9 +145,6 @@ int bfs(vector<vector<bool> > graph, int start, int end) {
     curVert = verts.front();
     distance = dist.front();
 
-    // NOTE for debugging purposes only
-    // cout << curVert << "(" << distance << ")" << endl;
-
     // if vertex equals end, return distance
     if (curVert == end) {
       return distance;
