@@ -55,17 +55,6 @@ vector<string> split(const string &s, char delim) {
 }
 
 /**
- * Removes all instances of a character in a string
- * @param  input string to remove characters from
- * @param  c     character to search and remove
- * @return       string with characters removed
- */
-string removeChar(string input, char c) {
-  input.erase(remove(input.begin(), input.end(), c), input.end());
-  return input;
-}
-
-/**
  * Prints the matrix in a readable format
  * @param matrix the adjacency matrix of a graph
  * @param title a title to print before the matrix
@@ -312,83 +301,30 @@ vector<vector<int> > components(vector<vector<bool> > graph) {
 
 int main(int argc, char const *argv[]) {
 
-  cout << endl;
-
-  // get number of vertices from the user
-  cout << "Enter the number of vertices in your graph" << endl << endl
-       << "VERTICES: ";
-
-  string numInput;
-  getline(cin, numInput);
-
-  // convert number given by user from string to integer
-  int numOfNodes = 0;
-  try {
-    numOfNodes = stoi(numInput);
-  } catch (exception const & e) {
-    return displayFatalError("Can not convert given number to an integer.");
-  }
-
-  cout << endl;
-
-  // get the graph from the user
-  cout << "Enter your graph " << endl
-       << "  Undirected Example: 0-1, 2-0" << endl
-       << "  Directed Example: 0->1, 1->2, 2->0" << endl << endl
-       << "GRAPH: ";
+  cout << endl
+       << "Enter the graph: ";
 
   string graphString;
   getline(cin, graphString);
 
+  vector<string> args = split(graphString, ' ');
+
+  // check for error in input
+  if (args.size() % 2 != 0) {
+    return displayFatalError("Invalid number of arguments");
+  }
+  if (stoi(args[args.size() - 1]) != -1) {
+    return displayFatalError("Use a -1 at the end of the graph to signify end");
+  }
+
+  int numOfNodes = stoi(args[0]);
+
   // setup an Adjacency matrix with size given by user
   vector<vector<bool> > adjMat(numOfNodes, vector<bool>(numOfNodes, false));
 
-  // setup a vector for the edges inputed by the user
-  vector<string> edges = split(removeChar(graphString, ' '), ',');
-
-  // go through each edge and set the coresponding adjacency
-  bool isValid, isDirected;
-  for (vector<string>::iterator it = edges.begin() ; it != edges.end(); ++it) {
-    isValid = (*it).find("-") != string::npos;
-
-    // make sure the edges are valid
-    if (!isValid) {
-      return displayFatalError("'" + *it
-          + "' is not a valid edge. Use '-' or '->'");
-    }
-
-    // check if the edge given was in undirected or directed form
-    isDirected = (*it).find("->") != string::npos;
-
-    // save the edge in a pair format [i, j]
-    vector<string> edgePair;
-    if (isDirected) {
-      edgePair = split(removeChar(*it, '>'), '-');
-    } else {
-      edgePair = split(*it, '-');
-    }
-
-    // get the Aij values
-    int edgeI = stoi(edgePair[0]);
-    int edgeJ = stoi(edgePair[1]);
-
-    // make sure the ij values do not exceed or equal the number of nodes
-    if (edgeI >= numOfNodes || edgeJ >= numOfNodes) {
-      return displayFatalError(
-          "Edge '" + to_string(edgeI) + "-" + (isDirected ? ">" : "") +
-          to_string(edgeJ) +
-          "' contains vertex that is greater than or equal to the "
-          "number of nodes given (" + to_string(numOfNodes) + ").");
-    }
-
-    // set the adjacency matrix value for directed graph
-    adjMat[edgeJ][edgeI] = true;
-
-    // if it's undirected, set the other adjacency value too
-    if (!isDirected) {
-      adjMat[edgeI][edgeJ] = true;
-    }
-
+  for (int i = 1; i < args.size() - 2; i += 2) {
+    adjMat[stoi(args[i])][stoi(args[i+1])] = true;
+    adjMat[stoi(args[i+1])][stoi(args[i])] = true;
   }
 
   // print the adjacency matrix of the graph
