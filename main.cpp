@@ -300,14 +300,24 @@ vector<vector<int> > components(vector<vector<bool> > graph) {
 
 
 int main(int argc, char const *argv[]) {
+  // get the user input
+  vector<string> args;
 
-  cout << endl
-       << "Enter the graph: ";
+  if (argc == 2) { // user entered graph through cli as a string
+    args = split(argv[1], ' ');
+  } else if (argc > 1) { // user entered the values separatly
+    for (int i = 1; i < argc; i++) {
+      args.push_back(argv[i]);
+    }
+  } else { // the user wants to enter the values inside the progam
+    cout << endl
+         << "Enter the graph: ";
 
-  string graphString;
-  getline(cin, graphString);
+    string graphString;
+    getline(cin, graphString);
 
-  vector<string> args = split(graphString, ' ');
+    args = split(graphString, ' ');
+  }
 
   // check for error in input
   if (args.size() % 2 != 0) {
