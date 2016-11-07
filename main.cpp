@@ -1,3 +1,9 @@
+/**
+ * Assignment: 3
+ * Group: 21
+ * Team: Craig Harrison, Loc Tran, Zach Carey
+ */
+
 #include <string>
 #include <sstream>
 #include <vector>
