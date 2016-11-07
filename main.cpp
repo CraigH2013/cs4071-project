@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <queue>
+#include <set>
 
 using namespace std;
 
@@ -61,6 +62,7 @@ string removeChar(string input, char c) {
 /**
  * Prints the matrix in a readable format
  * @param matrix the adjacency matrix of a graph
+ * @param title a title to print before the matrix
  */
 template <typename T>
 void printMatrix(vector<vector<T> > matrix, string title) {
@@ -72,6 +74,23 @@ void printMatrix(vector<vector<T> > matrix, string title) {
       cout << setw(3) << matrix[i][j] << " ";
     }
     cout << endl;
+  }
+}
+
+/**
+ * Prints the components in a readable format
+ * @param comps the components
+ * @param title a title to print before the components
+ */
+template <typename T>
+void printComponents(vector<vector<T> > comps, string title) {
+  cout << endl << title << ": ";
+  for (int i = 0; i < comps.size(); i++) {
+    cout << "[";
+    for (int j = 0; j < comps[i].size(); j++) {
+      cout << comps[i][j] << (j != comps[i].size() - 1 ? ", " : "");
+    }
+    cout << "]" << (i != comps.size() - 1 ? ", " : "");
   }
 }
 
@@ -222,6 +241,68 @@ int diameter(vector<vector<bool> > graph) {
   return -1;
 }
 
+/**
+ * Gets the components of a graph
+ * @param  graph the adjacency matrix of the graph
+ * @return       the components of the graph
+ */
+vector<vector<int> > components(vector<vector<bool> > graph) {
+  // get the distance matrix of the graph
+  vector<vector<int> > distMatrix = distanceMatrix(graph);
+
+  // vector containing sets to avoid duplicates in components
+  vector<set<int> > comps;
+
+  int size = distMatrix[0].size();
+
+  // search the components to place each vertex
+  for (int i = 0; i < size; i++) {
+    for (int j = 0; j < size; j++) {
+      if (distMatrix[i][j] > 0) {
+        // search for a set with j
+        bool found = false;
+        int indexI = -1;
+
+        for (int k = 0; k < comps.size(); k++) {
+          set<int> comp = comps[k];
+          for (auto vert : comp) {
+            // set found, add i to the set s
+            if (vert == j) {
+              found = true;
+              comp.insert(i);
+            }
+
+            // keep track of the component that i was in
+            if (vert == i) {
+              indexI = k;
+            }
+          }
+        }
+
+        // if not found, check if i was found, or just add i and j to a new set
+        if (!found) {
+          if (indexI != -1) { // add j to the i set
+            comps[indexI].insert(j);
+          } else { // add a new set with both i and j
+            set<int> newSet = {i, j};
+            comps.push_back(newSet);
+          }
+        }
+      }
+    }
+  }
+
+  // copy the vector<set<int>> to a vector<vector<int>> for compatibility
+  vector<vector<int> > finalComps;
+
+  for (auto comp : comps) {
+    vector<int> verts(comp.begin(), comp.end());
+    finalComps.push_back(verts);
+  }
+
+  return finalComps;
+}
+
 
 int main(int argc, char const *argv[]) {
 
@@ -304,12 +385,25 @@ int main(int argc, char const *argv[]) {
 
   }
 
-  // print the adjacency matrix for the user to inspect
+  // print the adjacency matrix of the graph
   printMatrix(adjMat, "Adjacency Matrix");
 
-  printMatrix(distanceMatrix(adjMat), "Distance Matrix");
+  // print the distance matrix of the graph
+  vector<vector<int> > distMat = distanceMatrix(adjMat);
+  printMatrix(distMat, "Distance Matrix");
 
+  bool connected = isConnected(distMat);
   cout << endl;
+  cout << "Connected: " << (connected ? "True" : "False") << endl;
+
+  if (connected) {
+    cout << endl;
+    cout << "Diameter: " << diameter(adjMat);
+  } else {
+    printComponents(components(adjMat), "Components");
+  }
+
+  cout << endl << endl;
 
   return 0;
 }

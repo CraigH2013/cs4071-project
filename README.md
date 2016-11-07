@@ -5,7 +5,7 @@ Design and Analysis of Algorithms (CS 4071) – Fall 2016 – Programming Projec
 
 ## Compile and Run
 ```bash
-$ g++ main.cpp -o main.out; ./main.out
+$ g++ -std=c++11 main.cpp -o main.out; ./main.out
 ```
 
 ## Usage
